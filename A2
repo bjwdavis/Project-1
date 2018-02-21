@@ -1,0 +1,48 @@
+%c=-0.123-0.745i;  
+%c=0;
+c=0.36+0.1i;                   % the value of c
+%phi=inline('z^2-(-0.123-0.745i)'); 
+%phi=inline('z^2'); 
+phi=inline('z^2-(0.36+0.1i)'); % the iteration function
+fixpt1=0.5+sqrt(0.25-c);       % the fixed points of the iteration
+fixpt2=0.5-sqrt(0.25-c);
+colormap([1 0 0; 1 1 1]);      % points numbered 1 will be colored red
+nx=301;                        % the number of points in x direction
+ny=301;                        % the number of points in y direction
+ymax=2;                        % the max y value
+xmax=2;                        % the max x value 
+dy=2*ymax/(ny-1);              % step length in y direction  
+dx=2*xmax/(nx-1);              % step length in x direction
+tol=1.e-6;                     % tolerance
+kmax=100;                      % max number of iterations 
+m=2*ones(nx,ny);               % initialize the colors 
+for j=1:ny
+    y=(j-1)*dy-ymax;
+    for k=1:nx
+        x=(k-1)*dx-xmax;
+        z=x+1i*y;
+        zk=z;
+        iflag1=0;              % iflage counts the number of iterations that is close to the fixed points 
+        iflag2=0;
+        kount=0;
+        while kount<kmax & abs(zk)<2 & iflag1<5 & iflag2<5
+            kount=kount+1;
+            zk=phi(zk);
+            err1=abs(zk-fixpt1);
+            if err1<tol
+                iflag1=iflag1+1;
+            else iflag1=0;
+            end
+            err2=abs(zk-fixpt2);
+            if err2<tol
+                iflag2=iflag2+1;
+            else iflag2=0;
+            end
+        end
+        if iflag1>=5 | iflag2>=5 | kount>=kmax
+            m(j,k)=1;
+        end
+    end
+end
+image([-xmax xmax],[-ymax,ymax],m)
+axis xy

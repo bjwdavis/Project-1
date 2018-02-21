@@ -1,0 +1,30 @@
+c=0.16+0.6i;     % the value of c
+nx=1001;              % the number of points in x direction
+ny=1001;              % the number of points in x direction
+ymax=1.5;              % the max y value
+xmax=1.5;              % the max x value 
+dy=2*ymax/(ny-1);    % step length in y direction
+dx=2*xmax/(nx-1);    % step length in x direction
+flag=2*ones(nx,ny);  % initialize the colors 
+flag((1+nx)/2,(201+ny)/2)=1;
+kmax=40;
+colormap([1 204/255 204/255; 1 1 1]);
+for k=1:kmax
+    flagt=flag;
+    flag=2*ones(nx,ny);
+    for j=1:nx
+        for t=1:ny
+            if flagt(j,t)==1
+                x=(j-1)*dx-xmax;
+                y=(t-1)*dy-ymax;
+                z=sqrt(x+1i*y-c);
+                x=real(z);
+                y=imag(z);
+                flag(round((xmax+x)/dx+1),round((ymax+y)/dy+1))=1;
+                flag(round((xmax-x)/dx+1),round((ymax-y)/dy+1))=1;
+            end
+        end
+    end
+end
+image([-xmax xmax],[-ymax,ymax],flag)
+axis xy
